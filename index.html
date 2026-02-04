@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstudaGyn - Câmara de Goiânia</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        
+        :root {
+            --navy: #0A1E3D;
+            --navy-light: #1A2F4D;
+            --white: #FFFFFF;
+            --gray-light: #F5F7FA;
+            --gray-medium: #E2E8F0;
+            --gray-dark: #64748B;
+            --emerald: #10B981;
+            --emerald-light: #34D399;
+            --accent: #3B82F6;
+            --accent-light: #60A5FA;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #0A1E3D 0%, #1A2F4D 100%);
+            color: var(--navy);
+            min-height: 100vh;
+        }
+        
+        /* Login/Register Form */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .auth-logo h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 5px;
+        }
+        
+        .auth-logo p {
+            color: var(--gray-dark);
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 14px;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-medium);
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--navy);
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--gray-medium);
+        }
+        
+        .error-message {
+            background: #FEE2E2;
+            color: #DC2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .success-message {
+            background: #D1FAE5;
+            color: #059669;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* Main App Styles */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.6s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 24px;
+        }
+        
+        .logo-text h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--navy);
+            line-height: 1.2;
+        }
+        
+        .logo-text p {
+            font-size: 14px;
+            color: var(--gray-dark);
+            font-weight: 500;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: var(--navy);
+        }
+        
+        .btn-logout {
+            padding: 10px 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            background: #DC2626;
+            transform: translateY(-2px);
+        }
+        
+        .countdown-card {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .countdown-card h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .countdown-time {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .time-value {
+            font-size: 36px;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .time-label {
+            font-size: 12px;
+            opacity: 0.9;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar {
+            background: var(--gray-light);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald), var(--emerald-light));
+            border-radius: 6px;
+            transition: width 0.6s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--gray-dark);
+            font-weight: 600;
+        }
+        
+        .ai-suggestion {
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+        
+        .ai-suggestion h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .ai-suggestion p {
+            font-size: 14px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+        
+        .charts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .study-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+        
+        .subject-accordion {
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .subject-accordion:hover {
+            border-color: var(--accent-light);
+        }
+        
+        .subject-header {
+            background: var(--gray-light);
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .subject-header:hover {
+            background: var(--gray-medium);
+        }
+        
+        .subject-header.active {
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: white;
+        }
+        
+        .subject-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .subject-name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .subject-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            opacity: 0.8;
+            font-weight: 600;
+        }
+        
+        .subject-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .mini-progress {
+            width: 100px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .mini-progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .subject-content {
+            padding: 20px;
+            display: none;
+        }
+        
+        .subject-content.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .topic-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            background: var(--gray-light);
+        }
+        
+        .topic-item:hover {
+            background: var(--gray-medium);
+            transform: translateX(5px);
+        }
+        
+        .topic-checkboxes {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--emerald);
+        }
+        
+        .checkbox-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .topic-text {
+            flex: 1;
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--navy);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .countdown-time {
+                gap: 10px;
+            }
+            
+            .time-value {
+                font-size: 28px;
+            }
+            
+            .app-container {
+                padding: 10px;
+            }
+            
+            .auth-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+        const { PieChart, Pie, Cell, ResponsiveContainer, RadarChart, Radar, PolarGrid, PolarAngleAxis, Tooltip } = Recharts;
+        
+        const API_URL = window.location.origin;
+        
+        // ============== AUTH COMPONENT ==============
+        function AuthForm({ onLogin }) {
+            const [isLogin, setIsLogin] = useState(true);
+            const [formData, setFormData] = useState({
+                email: '',
+                password: '',
+                name: '',
+                cargo: 'agente'
+            });
+            const [error, setError] = useState('');
+            const [success, setSuccess] = useState('');
+            const [loading, setLoading] = useState(false);
+            
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setError('');
+                setSuccess('');
+                setLoading(true);
+                
+                const endpoint = isLogin ? '/api/login' : '/api/register';
+                const payload = isLogin 
+                    ? { email: formData.email, password: formData.password }
+                    : formData;
+                
+                try {
+                    const response = await fetch(API_URL + endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        setSuccess(data.message);
+                        setTimeout(() => onLogin(data.user), 1000);
+                    } else {
+                        setError(data.error);
+                    }
+                } catch (err) {
+                    setError('Erro ao conectar com o servidor');
+                } finally {
+                    setLoading(false);
+                }
+            };
+            
+            return (
+                <div className="auth-container">
+                    <div className="auth-card">
+                        <div className="auth-logo">
+                            <div className="auth-logo-icon">EG</div>
+                            <h1>EstudaGyn</h1>
+                            <p>Câmara Municipal de Goiânia</p>
+                        </div>
+                        
+                        {error && <div className="error-message">{error}</div>}
+                        {success && <div className="success-message">{success}</div>}
+                        
+                        <form onSubmit={handleSubmit}>
+                            {!isLogin && (
+                                <div className="form-group">
+                                    <label className="form-label">Nome Completo</label>
+                                    <input
+                                        type="text"
+                                        className="form-input"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                        required={!isLogin}
+                                    />
+                                </div>
+                            )}
+                            
+                            <div className="form-group">
+                                <label className="form-label">Email</label>
+                                <input
+                                    type="email"
+                                    className="form-input"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label className="form-label">Senha</label>
+                                <input
+                                    type="password"
+                                    className="form-input"
+                                    value={formData.password}
+                                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                                    required
+                                />
+                            </div>
+                            
+                            {!isLogin && (
+                                <div className="form-group">
+                                    <label className="form-label">Cargo</label>
+                                    <select
+                                        className="form-select"
+                                        value={formData.cargo}
+                                        onChange={(e) => setFormData({...formData, cargo: e.target.value})}
+                                    >
+                                        <option value="agente">Agente Administrativo</option>
+                                        <option value="analista">Analista Técnico Legislativo</option>
+                                    </select>
+                                </div>
+                            )}
+                            
+                            <button type="submit" className="btn btn-primary" disabled={loading}>
+                                {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Criar Conta')}
+                            </button>
+                            
+                            <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => setIsLogin(!isLogin)}
+                            >
+                                {isLogin ? 'Não tem conta? Cadastre-se' : 'Já tem conta? Faça login'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+        
+        // ============== MAIN APP COMPONENT ==============
+        function App() {
+            const [user, setUser] = useState(null);
+            const [loading, setLoading] = useState(true);
+            const [curriculum, setCurriculum] = useState([]);
+            const [progress, setProgress] = useState({});
+            const [stats, setStats] = useState(null);
+            const [chartData, setChartData] = useState(null);
+            const [suggestion, setSuggestion] = useState(null);
+            const [openSubjects, setOpenSubjects] = useState({});
+            
+            const [countdown, setCountdown] = useState({
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0
+            });
+            
+            // Verificar autenticação
+            useEffect(() => {
+                const token = localStorage.getItem('token');
+                const userData = localStorage.getItem('user');
+                
+                if (token && userData) {
+                    setUser(JSON.parse(userData));
+                } else {
+                    setLoading(false);
+                }
+            }, []);
+            
+            // Carregar dados
+            useEffect(() => {
+                if (user) {
+                    loadData();
+                }
+            }, [user]);
+            
+            const loadData = async () => {
+                const token = localStorage.getItem('token');
+                const headers = {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                };
+                
+                try {
+                    // Carregar currículo
+                    const currResponse = await fetch(`${API_URL}/api/curriculum/${user.cargo}`, { headers });
+                    const currData = await currResponse.json();
+                    setCurriculum(currData);
+                    
+                    // Carregar progresso
+                    const progResponse = await fetch(`${API_URL}/api/progress`, { headers });
+                    const progData = await progResponse.json();
+                    const progressMap = {};
+                    progData.forEach(p => {
+                        progressMap[p.topic_id] = {
+                            studied: p.is_studied === 1,
+                            reviewed: p.is_reviewed === 1
+                        };
+                    });
+                    setProgress(progressMap);
+                    
+                    // Carregar estatísticas
+                    const statsResponse = await fetch(`${API_URL}/api/stats`, { headers });
+                    const statsData = await statsResponse.json();
+                    setStats(statsData);
+                    
+                    // Carregar dados dos gráficos
+                    const chartsResponse = await fetch(`${API_URL}/api/charts`, { headers });
+                    const chartsData = await chartsResponse.json();
+                    setChartData(chartsData);
+                    
+                    // Carregar sugestão
+                    const suggResponse = await fetch(`${API_URL}/api/suggestion`, { headers });
+                    const suggData = await suggResponse.json();
+                    setSuggestion(suggData);
+                    
+                    setLoading(false);
+                } catch (error) {
+                    console.error('Erro ao carregar dados:', error);
+                    setLoading(false);
+                }
+            };
+            
+            // Countdown
+            useEffect(() => {
+                const provaDate = new Date('2026-03-15T08:00:00');
+                
+                const updateCountdown = () => {
+                    const now = new Date();
+                    const diff = provaDate - now;
+                    
+                    if (diff > 0) {
+                        setCountdown({
+                            days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+                            hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                            minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+                            seconds: Math.floor((diff % (1000 * 60)) / 1000)
+                        });
+                    }
+                };
+                
+                updateCountdown();
+                const interval = setInterval(updateCountdown, 1000);
+                return () => clearInterval(interval);
+            }, []);
+            
+            const handleLogout = () => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                setUser(null);
+            };
+            
+            const toggleSubject = (subjectId) => {
+                setOpenSubjects(prev => ({
+                    ...prev,
+                    [subjectId]: !prev[subjectId]
+                }));
+            };
+            
+            const handleTopicCheck = async (topicId, type) => {
+                const token = localStorage.getItem('token');
+                const currentProgress = progress[topicId] || { studied: false, reviewed: false };
+                const newProgress = {
+                    ...currentProgress,
+                    [type]: !currentProgress[type]
+                };
+                
+                setProgress(prev => ({
+                    ...prev,
+                    [topicId]: newProgress
+                }));
+                
+                try {
+                    await fetch(`${API_URL}/api/progress`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            topic_id: topicId,
+                            is_studied: newProgress.studied,
+                            is_reviewed: newProgress.reviewed
+                        })
+                    });
+                    
+                    // Recarregar estatísticas
+                    loadData();
+                } catch (error) {
+                    console.error('Erro ao atualizar progresso:', error);
+                }
+            };
+            
+            if (!user) {
+                return <AuthForm onLogin={setUser} />;
+            }
+            
+            if (loading) {
+                return <div className="loading">Carregando...</div>;
+            }
+            
+            const pieData = stats ? [
+                { name: 'Estudados', value: stats.studied, color: '#10B981' },
+                { name: 'Pendentes', value: stats.total - stats.studied, color: '#E2E8F0' }
+            ] : [];
+            
+            const radarData = chartData ? chartData.subjects.map(s => ({
+                materia: s.nome.split(' ').slice(0, 2).join(' '),
+                progresso: parseInt(s.progress)
+            })) : [];
+            
+            return (
+                <div className="app-container">
+                    <header className="header">
+                        <div className="header-top">
+                            <div className="logo">
+                                <div className="logo-icon">EG</div>
+                                <div className="logo-text">
+                                    <h1>EstudaGyn</h1>
+                                    <p>Câmara Municipal de Goiânia</p>
+                                </div>
+                            </div>
+                            
+                            <div className="user-info">
+                                <span className="user-name">Olá, {user.name}!</span>
+                                <button className="btn-logout" onClick={handleLogout}>Sair</button>
+                            </div>
+                        </div>
+                        
+                        <div className="countdown-card">
+                            <h2>⏰ Tempo até a Prova (15/03/2026)</h2>
+                            <div className="countdown-time">
+                                <div className="time-unit">
+                                    <span className="time-value">{countdown.days}</span>
+                                    <span className="time-label">Dias</span>
+                                </div>
+                                <div className="time-unit">
+                                    <span className="time-value">{countdown.hours}</span>
+                                    <span className="time-label">Horas</span>
+                                </div>
+                                <div className="time-unit">
+                                    <span className="time-value">{countdown.minutes}</span>
+                                    <span className="time-label">Min</span>
+                                </div>
+                                <div className="time-unit">
+                                    <span className="time-value">{countdown.seconds}</span>
+                                    <span className="time-label">Seg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <div className="main-grid">
+                        <aside className="sidebar">
+                            <div className="card">
+                                <h2 className="card-title">📊 Progresso Geral</h2>
+                                {stats && (
+                                    <>
+                                        <div className="progress-bar">
+                                            <div 
+                                                className="progress-fill" 
+                                                style={{width: `${stats.percentage}%`}}
+                                            ></div>
+                                        </div>
+                                        <div className="progress-text">
+                                            <span>Concluído</span>
+                                            <span>{stats.percentage}%</span>
+                                        </div>
+                                        
+                                        <div style={{marginTop: '20px', fontSize: '14px', color: 'var(--gray-dark)'}}>
+                                            <p><strong>{stats.studied}</strong> de <strong>{stats.total}</strong> tópicos estudados</p>
+                                            <p><strong>{stats.reviewed}</strong> de <strong>{stats.total}</strong> tópicos revisados</p>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                            
+                            {suggestion && (
+                                <div className="card">
+                                    <h2 className="card-title">🤖 O que estudar hoje?</h2>
+                                    <div className="ai-suggestion">
+                                        <h3>💡 Sugestão da IA</h3>
+                                        <p><strong>{suggestion.materia}</strong></p>
+                                        <p style={{marginTop: '10px', fontSize: '13px'}}>{suggestion.topico}</p>
+                                    </div>
+                                </div>
+                            )}
+                        </aside>
+                        
+                        <div className="charts-container">
+                            <div className="chart-card">
+                                <h2 className="card-title">📈 Tópicos Estudados vs. Pendentes</h2>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <PieChart>
+                                        <Pie
+                                            data={pieData}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                                            outerRadius={100}
+                                            fill="#8884d8"
+                                            dataKey="value"
+                                        >
+                                            {pieData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                            
+                            <div className="chart-card">
+                                <h2 className="card-title">🎯 Competência por Matéria</h2>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                                        <PolarGrid stroke="#E2E8F0" />
+                                        <PolarAngleAxis dataKey="materia" tick={{fill: '#0A1E3D', fontSize: 12}} />
+                                        <Radar name="Progresso %" dataKey="progresso" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
+                                        <Tooltip />
+                                    </RadarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="study-content">
+                        <h2 className="card-title" style={{marginBottom: '25px'}}>📚 Conteúdo Programático</h2>
+                        
+                        {curriculum.map((materia) => {
+                            const topicosMateria = materia.topicos?.length || 0;
+                            const estudadosMateria = materia.topicos?.filter(t => progress[t.id]?.studied).length || 0;
+                            const progressPercent = topicosMateria > 0 ? (estudadosMateria / topicosMateria * 100).toFixed(0) : 0;
+                            
+                            return (
+                                <div key={materia.id} className="subject-accordion">
+                                    <div 
+                                        className={`subject-header ${openSubjects[materia.id] ? 'active' : ''}`}
+                                        onClick={() => toggleSubject(materia.id)}
+                                    >
+                                        <div className="subject-info">
+                                            <div className="subject-name">{materia.nome}</div>
+                                            <div className="subject-meta">
+                                                <span>📝 {materia.questoes} questões</span>
+                                                <span>⚖️ Peso {materia.peso}</span>
+                                                <span>📖 {topicosMateria} tópicos</span>
+                                            </div>
+                                        </div>
+                                        <div className="subject-progress">
+                                            <span style={{fontSize: '14px', fontWeight: '600'}}>{progressPercent}%</span>
+                                            <div className="mini-progress">
+                                                <div className="mini-progress-fill" style={{width: `${progressPercent}%`}}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className={`subject-content ${openSubjects[materia.id] ? 'active' : ''}`}>
+                                        {materia.topicos?.map((topico) => {
+                                            const isStudied = progress[topico.id]?.studied || false;
+                                            const isReviewed = progress[topico.id]?.reviewed || false;
+                                            
+                                            return (
+                                                <div key={topico.id} className="topic-item">
+                                                    <div className="topic-checkboxes">
+                                                        <div className="checkbox-wrapper">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="checkbox"
+                                                                checked={isStudied}
+                                                                onChange={() => handleTopicCheck(topico.id, 'studied')}
+                                                            />
+                                                            <span className="checkbox-label">Estudei</span>
+                                                        </div>
+                                                        <div className="checkbox-wrapper">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="checkbox"
+                                                                checked={isReviewed}
+                                                                onChange={() => handleTopicCheck(topico.id, 'reviewed')}
+                                                                style={{accentColor: '#3B82F6'}}
+                                                            />
+                                                            <span className="checkbox-label">Revisei</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="topic-text">{topico.texto}</div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
